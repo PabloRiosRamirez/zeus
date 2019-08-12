@@ -1,4 +1,4 @@
-package online.grisk.hefesto;
+package online.grisk.zeus;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
