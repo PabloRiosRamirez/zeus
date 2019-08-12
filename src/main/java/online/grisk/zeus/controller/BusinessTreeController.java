@@ -18,17 +18,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class BusinessTreeController {
 
 	@PostMapping(value = "/api/zeus/businessTree")
-	public ResponseEntity<?> businessTree(@RequestBody JsonNode payload) throws IOException {
+	public ResponseEntity<?> businessTree(@RequestBody Map payload) throws IOException {
 		Map<String, Object> attribute = new HashMap<>();
 		for (int i = 0; i < new Random().nextInt(35) + 20; i++) {
-			attribute.put("variable_" + i, new Random().nextInt(35000) + 1 + "");
+			attribute.put("nivel_" + i, new Random().nextInt(35000) + 1 + "");
 		}
-		((Map) payload.get("businessTree")).put("values", attribute);
+		HashMap<String, Object> tree = new HashMap<>();
+		tree.put("nivels", attribute);
+		HashMap output= new HashMap();
+		output.put("color", "#A32234");
+		output.put("label", "Rechazado");
+		tree.put("output", output);
+		((Map) payload.get("businessTree")).put("values", tree);
 
-		ObjectMapper mapper = new ObjectMapper();
 		
-		Map<String, Object> jsonMap = mapper.convertValue(payload, Map.class);
-		
-		return new ResponseEntity<Map<String, Object>>(jsonMap, HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(payload, HttpStatus.OK);
 	}
 }
