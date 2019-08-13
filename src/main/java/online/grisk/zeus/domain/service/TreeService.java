@@ -67,6 +67,7 @@ public class TreeService {
             }
             nameNodes.add(nameInterNodes);
         }
+        this.listNode = nameNodes;
         this.node = nodes.get(nodeCollection.get(0).getOrDefault("idNodeTree", "default").toString());
     }
 
