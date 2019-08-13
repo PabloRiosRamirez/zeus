@@ -17,12 +17,8 @@ public class MainController {
     @Autowired
     GatewayService gatewayService;
 
-    @PostMapping(value = "/v1/rest/api/matriz")
+    @PostMapping(value = "/api/zeus/businessTree")
     public Map<String, Object> report(@RequestBody Map payload) {
-        HashMap<String, Object> response = new HashMap<>();
-        response.put("uuid", UUID.randomUUID());
-        response.put("timestamp", new Date());
-        response.put("request", payload);
-        return gatewayService.process(MessageBuilder.withPayload(response).build());
+        return gatewayService.process(MessageBuilder.withPayload(payload).build());
     }
 }
