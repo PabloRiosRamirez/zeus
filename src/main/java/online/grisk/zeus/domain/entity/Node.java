@@ -5,13 +5,15 @@ public class Node {
     private boolean query;
     private boolean output;
     private String color;
+    private String expression;
     private String label;
     private Node childrenNegation;
     private Node childrenAfirmation;
 
-    public Node(boolean query, boolean output) {
+    public Node(boolean query, String expression, boolean output) {
         this.query = query;
         this.output = output;
+        this.expression = expression;
     }
 
     public Node(boolean output, String color, String label) {
@@ -75,6 +77,14 @@ public class Node {
 
     public void setChildrenAfirmation(Node childrenAfirmation) {
         this.childrenAfirmation = childrenAfirmation;
+    }
+
+    public String getExpression() {
+        return expression;
+    }
+
+    public void setExpression(String expression) {
+        this.expression = expression;
     }
 
     public Node executeFlowTree(){

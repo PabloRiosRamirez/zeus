@@ -2,6 +2,7 @@ package online.grisk.zeus.domain.service;
 
 import online.grisk.zeus.domain.entity.Node;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
 public class TreeService {
 
     private Node node;
+    private List listNode;
     private int cantOutput;
     private int cantLeaves;
 
@@ -27,7 +29,7 @@ public class TreeService {
             } else {
                 String expression = node.getOrDefault("expression", "").toString();
                 nodes.put(node.getOrDefault("idNodeTree", "default").toString(),
-                        new Node(true, false));
+                        new Node(true, expression, false));
             }
 
         }
@@ -40,6 +42,30 @@ public class TreeService {
                 node.setChildrenNegation(nodes.get(nodeMap.getOrDefault("childrenNegation", "default").toString()));
                 node.setChildrenAfirmation(nodes.get(nodeMap.getOrDefault("childrenAfirmation", "default").toString()));
             }
+        }
+        List<List> nameNodes = new ArrayList();
+        for (Node node : nodes.values()) {
+            List nameInterNodes = new ArrayList();
+            if (node.isOutput()){
+                nameInterNodes.add(node.getLabel());
+            }else{
+                nameInterNodes.add(node.getExpression());
+            }
+            if (node.getChildrenNegation() != null ){
+                if (node.getChildrenNegation().isOutput()){
+                    nameInterNodes.add(node.getChildrenNegation().getLabel());
+                }else{
+                    nameInterNodes.add(node.getChildrenNegation().getExpression());
+                }
+            }
+            if (node.getChildrenAfirmation() != null ){
+                if (node.getChildrenAfirmation().isOutput()){
+                    nameInterNodes.add(node.getChildrenAfirmation().getLabel());
+                }else{
+                    nameInterNodes.add(node.getChildrenAfirmation().getExpression());
+                }
+            }
+            nameNodes.add(nameInterNodes);
         }
         this.node = nodes.get(nodeCollection.get(0).getOrDefault("idNodeTree", "default").toString());
     }
@@ -89,5 +115,13 @@ public class TreeService {
 
     public void setCantLeaves(int cantLeaves) {
         this.cantLeaves = cantLeaves;
+    }
+
+    public List getListNode() {
+        return listNode;
+    }
+
+    public void setListNode(List listNode) {
+        this.listNode = listNode;
     }
 }

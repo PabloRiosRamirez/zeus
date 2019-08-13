@@ -20,6 +20,7 @@ public class MatrizServiceActivator implements Activator {
         List values = new ArrayList();
         values.add(treeService.executeFlowTree());
         businessTree.put("values", values);
+        businessTree.put("listNames", treeService.getListNode());
         return payload;
     }
 }
