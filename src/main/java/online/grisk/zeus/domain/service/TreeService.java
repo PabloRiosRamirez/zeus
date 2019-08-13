@@ -45,27 +45,36 @@ public class TreeService {
         }
         List<List> nameNodes = new ArrayList();
         for (Node node : nodes.values()) {
-            List nameInterNodes = new ArrayList();
-            if (node.isOutput()){
-                nameInterNodes.add(node.getLabel());
-            }else{
-                nameInterNodes.add(node.getExpression());
-            }
+
             if (node.getChildrenNegation() != null ){
+                List nameInterNodes = new ArrayList();
+                if (node.isOutput()){
+                    nameInterNodes.add(node.getLabel());
+                }else{
+                    nameInterNodes.add(node.getExpression());
+                }
                 if (node.getChildrenNegation().isOutput()){
                     nameInterNodes.add(node.getChildrenNegation().getLabel());
                 }else{
                     nameInterNodes.add(node.getChildrenNegation().getExpression());
                 }
+                nameNodes.add(nameInterNodes);
             }
             if (node.getChildrenAfirmation() != null ){
+                List nameInterNodes = new ArrayList();
+                if (node.isOutput()){
+                    nameInterNodes.add(node.getLabel());
+                }else{
+                    nameInterNodes.add(node.getExpression());
+                }
                 if (node.getChildrenAfirmation().isOutput()){
                     nameInterNodes.add(node.getChildrenAfirmation().getLabel());
                 }else{
                     nameInterNodes.add(node.getChildrenAfirmation().getExpression());
                 }
+                nameNodes.add(nameInterNodes);
             }
-            nameNodes.add(nameInterNodes);
+
         }
         this.listNode = nameNodes;
         this.node = nodes.get(nodeCollection.get(0).getOrDefault("idNodeTree", "default").toString());
