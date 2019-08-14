@@ -16,7 +16,7 @@ public class MatrizServiceActivator implements Activator {
     public Map<String, Object> invoke(@Payload Map<String, Object> payload, @Headers Map<String, Object> header) {
         Map<String, Object> businessTree = ((Map)payload.get("businessTree"));
         TreeService treeService = new TreeService();
-        treeService.populateTree(businessTree);
+        treeService.populateTree(payload, businessTree);
         List values = new ArrayList();
         values.add(treeService.executeFlowTree());
         businessTree.put("values", values);

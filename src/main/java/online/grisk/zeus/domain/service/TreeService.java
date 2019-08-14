@@ -1,11 +1,11 @@
 package online.grisk.zeus.domain.service;
 
 import online.grisk.zeus.domain.entity.Node;
+import online.grisk.zeus.integration.utils.MathOperator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TreeService {
 
@@ -14,8 +14,9 @@ public class TreeService {
     private int cantOutput;
     private int cantLeaves;
 
-    public void populateTree(Map payload) {
-        List<Map<String, Object>> nodeCollection = (List) ((Map) payload.get("configuration")).get("nodeTreeCollection");
+    public void populateTree(Map payload, Map riskTree) {
+        List<Map<String, Object>> variables = (List<Map<String, Object>>) ((Map) payload.get("dataintegration")).get("values");
+        List<Map<String, Object>> nodeCollection = (List) ((Map) riskTree.get("configuration")).get("nodeTreeCollection");
 
         Map<String, Node> nodes = new HashMap<>();
         for (Map<String, Object> node : nodeCollection) {
@@ -28,8 +29,22 @@ public class TreeService {
                                 node.getOrDefault("labelOutput", "").toString()));
             } else {
                 String expression = node.getOrDefault("expression", "").toString();
+                Pattern p = Pattern.compile(Pattern.quote("{") + "(.*?)" + Pattern.quote("}"));
+                Matcher m = p.matcher(expression);
+                String variableEnOperacion = null;
+                while (m.find()) {
+                    variableEnOperacion = m.group(1);
+                }
+
+                String valorVariable = null;
+                for (Map variable : variables) {
+                    if (variable.get("code").toString().equalsIgnoreCase(variableEnOperacion)) {
+                        valorVariable = variable.get("value").toString();
+                    }
+                }
+                expression = expression.replace(variableEnOperacion, valorVariable).replace("{", "").replace("}", "").replaceAll(" ", "");
                 nodes.put(node.getOrDefault("idNodeTree", "default").toString(),
-                        new Node(true, expression, false));
+                        new Node(MathOperator.orquestadorOperacion(expression) == 0 ? false : true, expression, false));
             }
 
         }
@@ -46,30 +61,30 @@ public class TreeService {
         List<List> nameNodes = new ArrayList();
         for (Node node : nodes.values()) {
 
-            if (node.getChildrenNegation() != null ){
+            if (node.getChildrenNegation() != null) {
                 List nameInterNodes = new ArrayList();
-                if (node.isOutput()){
+                if (node.isOutput()) {
                     nameInterNodes.add(node.getLabel());
-                }else{
+                } else {
                     nameInterNodes.add(node.getExpression());
                 }
-                if (node.getChildrenNegation().isOutput()){
+                if (node.getChildrenNegation().isOutput()) {
                     nameInterNodes.add(node.getChildrenNegation().getLabel());
-                }else{
+                } else {
                     nameInterNodes.add(node.getChildrenNegation().getExpression());
                 }
                 nameNodes.add(nameInterNodes);
             }
-            if (node.getChildrenAfirmation() != null ){
+            if (node.getChildrenAfirmation() != null) {
                 List nameInterNodes = new ArrayList();
-                if (node.isOutput()){
+                if (node.isOutput()) {
                     nameInterNodes.add(node.getLabel());
-                }else{
+                } else {
                     nameInterNodes.add(node.getExpression());
                 }
-                if (node.getChildrenAfirmation().isOutput()){
+                if (node.getChildrenAfirmation().isOutput()) {
                     nameInterNodes.add(node.getChildrenAfirmation().getLabel());
-                }else{
+                } else {
                     nameInterNodes.add(node.getChildrenAfirmation().getExpression());
                 }
                 nameNodes.add(nameInterNodes);
