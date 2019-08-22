@@ -8,7 +8,7 @@ public class Node {
     private String expression;
     private String label;
     private Node childrenNegation;
-    private Node childrenAfirmation;
+    private Node childrenAffirmation;
 
     public Node(boolean query, String expression, boolean output) {
         this.query = query;
@@ -22,13 +22,13 @@ public class Node {
         this.label = label;
     }
 
-    public Node(boolean query, boolean output, String color, String label, Node childrenNegation, Node childrenAfirmation) {
+    public Node(boolean query, boolean output, String color, String label, Node childrenNegation, Node childrenAffirmation) {
         this.query = query;
         this.output = output;
         this.color = color;
         this.label = label;
         this.childrenNegation = childrenNegation;
-        this.childrenAfirmation = childrenAfirmation;
+        this.childrenAffirmation = childrenAffirmation;
     }
 
     public boolean isQuery() {
@@ -71,12 +71,12 @@ public class Node {
         this.childrenNegation = childrenNegation;
     }
 
-    public Node getChildrenAfirmation() {
-        return childrenAfirmation;
+    public Node getChildrenAffirmation() {
+        return childrenAffirmation;
     }
 
-    public void setChildrenAfirmation(Node childrenAfirmation) {
-        this.childrenAfirmation = childrenAfirmation;
+    public void setChildrenAffirmation(Node childrenAffirmation) {
+        this.childrenAffirmation = childrenAffirmation;
     }
 
     public String getExpression() {
@@ -92,7 +92,7 @@ public class Node {
             return this;
         }
         if(query){
-            return this.childrenAfirmation.executeFlowTree();
+            return this.childrenAffirmation.executeFlowTree();
         }else{
             return this.childrenNegation.executeFlowTree();
         }
@@ -106,7 +106,7 @@ public class Node {
                 ", color='" + color + '\'' +
                 ", label='" + label + '\'' +
                 ", childrenNegation=" + childrenNegation +
-                ", childrenAfirmation=" + childrenAfirmation +
+                ", childrenAfirmation=" + childrenAffirmation +
                 '}';
     }
 }

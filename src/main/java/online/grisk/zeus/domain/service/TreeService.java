@@ -16,13 +16,13 @@ public class TreeService {
 
     public void populateTree(Map payload, Map riskTree) {
         List<Map<String, Object>> variables = (List<Map<String, Object>>) ((Map) payload.get("dataintegration")).get("values");
-        List<Map<String, Object>> nodeCollection = (List) ((Map) riskTree.get("configuration")).get("nodeTreeCollection");
+        List<Map<String, Object>> nodeCollection = (List) ((Map) riskTree.get("configuration")).get("businessTreeNodeCollection");
 
         Map<String, Node> nodes = new HashMap<>();
         for (Map<String, Object> node : nodeCollection) {
             boolean isOutput = (boolean) node.getOrDefault("output", false);
             if (isOutput) {
-                nodes.put(node.getOrDefault("idNodeTree", "default").toString(),
+                nodes.put(node.getOrDefault("idBusinessTreeNode", "default").toString(),
                         new Node(
                                 isOutput,
                                 node.getOrDefault("color", "#FFFFF").toString(),
@@ -43,7 +43,7 @@ public class TreeService {
                     }
                 }
                 expression = expression.replace(variableEnOperacion, valorVariable).replace("{", "").replace("}", "").replaceAll(" ", "");
-                nodes.put(node.getOrDefault("idNodeTree", "default").toString(),
+                nodes.put(node.getOrDefault("idBusinessTreeNode", "default").toString(),
                         new Node(MathOperator.orquestadorOperacion(expression) == 0 ? false : true, expression, false));
             }
 
@@ -53,9 +53,9 @@ public class TreeService {
             Map<String, Object> nodeMap = nodeCollection.get(i);
             boolean isOutput = (boolean) nodeMap.getOrDefault("output", false);
             if (!isOutput) {
-                Node node = nodes.get(nodeMap.getOrDefault("idNodeTree", "default").toString());
+                Node node = nodes.get(nodeMap.getOrDefault("idBusinessTreeNode", "default").toString());
                 node.setChildrenNegation(nodes.get(nodeMap.getOrDefault("childrenNegation", "default").toString()));
-                node.setChildrenAfirmation(nodes.get(nodeMap.getOrDefault("childrenAfirmation", "default").toString()));
+                node.setChildrenAffirmation(nodes.get(nodeMap.getOrDefault("childrenAffirmation", "default").toString()));
             }
         }
         List<List> nameNodes = new ArrayList();
@@ -75,35 +75,35 @@ public class TreeService {
                 }
                 nameNodes.add(nameInterNodes);
             }
-            if (node.getChildrenAfirmation() != null) {
+            if (node.getChildrenAffirmation() != null) {
                 List nameInterNodes = new ArrayList();
                 if (node.isOutput()) {
                     nameInterNodes.add(node.getLabel());
                 } else {
                     nameInterNodes.add(node.getExpression());
                 }
-                if (node.getChildrenAfirmation().isOutput()) {
-                    nameInterNodes.add(node.getChildrenAfirmation().getLabel());
+                if (node.getChildrenAffirmation().isOutput()) {
+                    nameInterNodes.add(node.getChildrenAffirmation().getLabel());
                 } else {
-                    nameInterNodes.add(node.getChildrenAfirmation().getExpression());
+                    nameInterNodes.add(node.getChildrenAffirmation().getExpression());
                 }
                 nameNodes.add(nameInterNodes);
             }
 
         }
         this.listNode = nameNodes;
-        this.node = nodes.get(nodeCollection.get(0).getOrDefault("idNodeTree", "default").toString());
+        this.node = nodes.get(nodeCollection.get(0).getOrDefault("idBusinessTreeNode", "default").toString());
     }
 
     private void countNodes(Node reco) {
         if (reco != null) {
-            if (reco.getChildrenAfirmation() == null && reco.getChildrenNegation() == null) {
+            if (reco.getChildrenAffirmation() == null && reco.getChildrenNegation() == null) {
                 cantLeaves++;
                 if (reco.isOutput()) {
                     cantOutput++;
                 }
             }
-            countNodes(reco.getChildrenAfirmation());
+            countNodes(reco.getChildrenAffirmation());
             countNodes(reco.getChildrenNegation());
         }
     }
