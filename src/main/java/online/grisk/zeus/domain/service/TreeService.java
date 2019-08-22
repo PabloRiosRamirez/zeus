@@ -92,7 +92,7 @@ public class TreeService {
 
         }
         this.listNode = nameNodes;
-        this.node = nodes.get(nodeCollection.get(0).getOrDefault("idBusinessTreeNode", "default").toString());
+        this.node = nodes.get(nodeCollection.get(nodeCollection.size()-1).getOrDefault("idBusinessTreeNode", "default").toString());
     }
 
     private void countNodes(Node reco) {
